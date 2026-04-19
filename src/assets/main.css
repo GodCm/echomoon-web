@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 24% 6%;
+    --foreground: 210 40% 98%;
+    --card: 240 24% 10%;
+    --card-foreground: 210 40% 98%;
+  }
+
+  * {
+    @apply border-background-lighter;
+  }
+
+  body {
+    @apply bg-background text-text antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-primary-light text-white px-6 py-3 rounded-full 
+           font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/30
+           hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply bg-background-lighter text-text border border-primary/30 px-6 py-3 rounded-full 
+           font-medium transition-all duration-300 hover:border-primary hover:bg-primary/10
+           hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .glass-card {
+    @apply bg-background/60 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+
+  .input-field {
+    @apply w-full bg-background-lighter border border-white/10 rounded-xl px-4 py-3
+           text-text placeholder:text-text-muted focus:outline-none focus:border-primary
+           focus:ring-2 focus:ring-primary/20 transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-moon-gold via-moon-silver to-moon-gold bg-clip-text text-transparent;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 15, 26, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.8);
+}
+
+/* Animation utilities */
+.animate-stagger > * {
+  animation: fadeIn 0.5s ease-out backwards;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
