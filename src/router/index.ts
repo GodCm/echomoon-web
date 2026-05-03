@@ -47,6 +47,21 @@ const router = createRouter({
       name: 'subscribe',
       component: () => import('@/views/SubscribeView.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: () => import('@/views/TermsView.vue')
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      component: () => import('@/views/PrivacyView.vue')
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('@/views/ContactView.vue')
     }
   ]
 })
