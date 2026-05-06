@@ -81,7 +81,7 @@
             <h2 class="text-xl font-semibold text-gray-900 mb-4">8. 联系我们</h2>
             <p class="text-gray-700 mb-4">
               如有任何疑问，请通过以下方式联系我们：<br>
-              邮箱：support@echomoon.app
+              邮箱：weifuaiii@qq.com
             </p>
           </section>
         </div>

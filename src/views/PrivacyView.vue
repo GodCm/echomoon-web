@@ -93,7 +93,7 @@
             <h2 class="text-xl font-semibold text-gray-900 mb-4">9. 联系我们</h2>
             <p class="text-gray-700 mb-4">
               如有任何隐私相关问题，请联系：<br>
-              邮箱：privacy@echomoon.app
+              邮箱：weifuaiii@qq.com
             </p>
           </section>
         </div>

@@ -22,8 +22,8 @@
                 <div>
                   <h3 class="text-lg font-medium text-gray-900">电子邮件</h3>
                   <p class="text-gray-700 mt-1">
-                    客服支持：<a href="mailto:support@echomoon.app" class="text-indigo-600 hover:text-indigo-500">support@echomoon.app</a><br>
-                    隐私相关问题：<a href="mailto:privacy@echomoon.app" class="text-indigo-600 hover:text-indigo-500">privacy@echomoon.app</a>
+                    客服支持：<a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a><br>
+                    隐私相关问题：<a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>
                   </p>
                 </div>
               </div>
@@ -60,7 +60,7 @@
             <h2 class="text-xl font-semibold text-gray-900 mb-4">反馈建议</h2>
             <p class="text-gray-700">
               我们非常重视您的反馈！如果您有功能建议或发现 bug，
-              请发邮件至 <a href="mailto:support@echomoon.app" class="text-indigo-600 hover:text-indigo-500">support@echomoon.app</a>，
+              请发邮件至 <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>，
               我们会认真考虑每一条建议。
             </p>
           </section>

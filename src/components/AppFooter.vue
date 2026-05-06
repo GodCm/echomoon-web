@@ -35,8 +35,8 @@
         <!-- Contact -->
         <div>
           <h4 class="text-white text-sm font-semibold mb-4">联系我们</h4>
-          <a href="mailto:support@echomoon.app" class="text-sm hover:text-white transition-colors">
-            support@echomoon.app
+          <a href="mailto:weifuaiii@qq.com" class="text-sm hover:text-white transition-colors">
+            weifuaiii@qq.com
           </a>
         </div>
       </div>
