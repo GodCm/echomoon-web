@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <template>
   <div class="min-h-screen bg-background flex flex-col">
+    <AppHeader />
     <RouterView class="flex-1" />
     <AppFooter />
   </div>
 </template>
-
-<style>
-/* Global styles handled in main.css */
-</style>

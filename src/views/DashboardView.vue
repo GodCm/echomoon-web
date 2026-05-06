@@ -5,10 +5,12 @@ import { useAuthStore } from '@/stores/auth'
 import { useCharacterStore } from '@/stores/character'
 import { RouterLink } from 'vue-router'
 import { Moon, Plus, MessageCircle, Crown, Star, ChevronRight, LogOut, User, Sparkles, Edit2, Trash2 } from 'lucide-vue-next'
+import { useUser } from '@clerk/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const characterStore = useCharacterStore()
+const { user } = useUser()
 
 // Delete confirmation modal
 const showDeleteModal = ref(false)
@@ -94,7 +96,7 @@ function cancelDelete() {
       <!-- Welcome Section -->
       <div class="mb-12">
         <h1 class="text-3xl font-bold mb-2">
-          Welcome back{{ authStore.user?.name ? `, ${authStore.user.name}` : '' }}
+          Welcome back{{ user?.firstName ? `, ${user.firstName}` : '' }}
         </h1>
         <p class="text-text-secondary">
           {{ authStore.isPro 

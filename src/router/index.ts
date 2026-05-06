@@ -11,42 +11,44 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/LoginView.vue'),
+      meta: { auth: 'signed-out' }
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('@/views/RegisterView.vue')
+      component: () => import('@/views/RegisterView.vue'),
+      meta: { auth: 'signed-out' }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/views/DashboardView.vue'),
-      meta: { requiresAuth: true }
+      meta: { auth: 'signed-in' }
     },
     {
       path: '/character/create',
       name: 'character-create',
       component: () => import('@/views/CharacterCreateView.vue'),
-      meta: { requiresAuth: true }
+      meta: { auth: 'signed-in' }
     },
     {
       path: '/character/edit/:id',
       name: 'character-edit',
       component: () => import('@/views/CharacterEditView.vue'),
-      meta: { requiresAuth: true }
+      meta: { auth: 'signed-in' }
     },
     {
       path: '/chat/:id',
       name: 'chat',
       component: () => import('@/views/ChatView.vue'),
-      meta: { requiresAuth: true }
+      meta: { auth: 'signed-in' }
     },
     {
       path: '/subscribe',
       name: 'subscribe',
       component: () => import('@/views/SubscribeView.vue'),
-      meta: { requiresAuth: true }
+      meta: { auth: 'signed-in' }
     },
     {
       path: '/terms',
@@ -64,16 +66,6 @@ const router = createRouter({
       component: () => import('@/views/ContactView.vue')
     }
   ]
-})
-
-router.beforeEach((to, _from, next) => {
-  const isAuthenticated = localStorage.getItem('auth_token')
-  
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next({ name: 'login' })
-  } else {
-    next()
-  }
 })
 
 export default router

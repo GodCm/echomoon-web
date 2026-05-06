@@ -1,12 +1,12 @@
-import axios from 'axios'
+// API layer using Clerk JWT tokens for authentication
 
-// 本地开发用 localhost，生产环境用环境变量
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://local host:3000/api'
 
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   body?: unknown
   headers?: Record<string, string>
+  token?: string  // Clert JWT token
 }
 
 // Helper to convert _id to id
@@ -31,9 +31,22 @@ function convertId(data: any): any {
   return data
 }
 
+// Get Clerk JWT token (to be set by caller)
+let _getToken: (() => Promise<string | null>) | null = null
+
+export function setGetToken(fn: () => Promise<string | null>) {
+  _getToken = fn
+}
+
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const token = localStorage.getItem('auth_token')
-  
+  let token = options.token
+
+  // Auto-get Clerk token if not provided
+  if (!token && _getToken) {
+    const t = await _getToken()
+    token = t || undefined
+  }
+
   const config: RequestInit = {
     method: options.method || 'GET',
     headers: {
@@ -48,7 +61,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config)
-  
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }))
     throw new Error(error.error || error.message || 'Request failed')
@@ -58,20 +71,9 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   return convertId(data)
 }
 
-// Auth API
-export const authApi = {
-  login: (email: string, password: string) =>
-    request<{ token: string; user: unknown }>('/auth/login', {
-      method: 'POST',
-      body: { email, password }
-    }),
-
-  register: (email: string, password: string, name?: string) =>
-    request<{ token: string; user: unknown }>('/auth/register', {
-      method: 'POST',
-      body: { email, password, name }
-    })
-}
+// Auth API - using Clerk (no custom login/register endpoints needed)
+// Auth is handled by Clerk directly (SignUp/SignIn components)
+// These exports are kept for backwards compatibility but use Clerk under the hood
 
 // Characters API
 export const characterApi = {

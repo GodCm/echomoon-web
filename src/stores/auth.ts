@@ -1,66 +1,52 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { User } from '@/types'
-import { authApi } from '@/api'
+import { ref, computed, watch } from 'vue'
+import { useAuth, useUser } from '@clerk/vue'
 
-function getStoredUser(): User | null {
-  const stored = localStorage.getItem('auth_user')
-  if (stored) {
-    try {
-      return JSON.parse(stored)
-    } catch {
-      return null
+// Subscribe to Clerk auth state and sync to this store
+export const useAuthStore = defineStore('auth', () => {
+  const { isSignedIn, getToken } = useAuth()
+  const { user } = useUser()
+
+  // Reactive state derived from Clerk
+  const isAuthenticated = computed(() => !!isSignedIn.value)
+  const isPro = computed(() => {
+    const pub = (user.value?.publicMetadata as any)?.subscription
+    return pub === 'pro'
+  })
+
+  // Get JWT token for API calls
+  async function getAuthToken() {
+    // Returns Clerk JWT for backend auth (requires JWT template configured in Clerk)
+    const token = await getToken.value?.()
+    return token
+  }
+
+  // Logout via Clerk
+  async function logout() {
+    const clerk = window.Clerk
+    if (clerk) {
+      await clerk.signOut()
     }
   }
-  return null
-}
 
-export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User | null>(getStoredUser())
-  const token = ref<string | null>(localStorage.getItem('auth_token'))
-
-  const isAuthenticated = computed(() => !!token.value)
-  const isPro = computed(() => user.value?.subscription === 'pro')
-
-  function setAuth(newToken: string, newUser: User) {
-    token.value = newToken
-    user.value = newUser
-    localStorage.setItem('auth_token', newToken)
-    localStorage.setItem('auth_user', JSON.stringify(newUser))
-  }
-
-  function logout() {
-    token.value = null
-    user.value = null
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
-  }
-
-  async function loginWithEmail(email: string, password: string) {
-    const result = await authApi.login(email, password)
-    setAuth(result.token, result.user as User)
-    return result
-  }
-
-  async function registerWithEmail(email: string, password: string, name?: string) {
-    const result = await authApi.register(email, password, name)
-    setAuth(result.token, result.user as User)
-    return result
-  }
-
-  function updateSubscription(subscription: 'free' | 'pro') {
-    if (user.value) {
-      user.value.subscription = subscription
+  // Update subscription in Clerk unsafeMetadata (keeps frontend in sync)
+  async function updateSubscription(subscription: 'free' | 'pro') {
+    try {
+      await user.value?.update({
+        unsafeMetadata: {
+          ...((user.value.unsafeMetadata as object) || {}),
+          subscription
+        }
+      })
+    } catch (e) {
+      console.error('Failed to update subscription', e)
     }
   }
 
   return {
-    user,
-    token,
     isAuthenticated,
     isPro,
-    loginWithEmail,
-    registerWithEmail,
+    getAuthToken,
     logout,
     updateSubscription
   }
