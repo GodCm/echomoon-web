@@ -6,27 +6,27 @@
         <div>
           <h3 class="text-white text-lg font-semibold mb-4">Echo Moon</h3>
           <p class="text-sm">
-            与 AI 角色对话，续写未完的故事。
+            Chat with AI characters. Continue the conversation left untold.
           </p>
         </div>
 
         <!-- Links -->
         <div>
-          <h4 class="text-white text-sm font-semibold mb-4">法律信息</h4>
+          <h4 class="text-white text-sm font-semibold mb-4">Legal</h4>
           <ul class="space-y-2">
             <li>
               <router-link to="/terms" class="text-sm hover:text-white transition-colors">
-                服务条款
+                Terms of Service
               </router-link>
             </li>
             <li>
               <router-link to="/privacy" class="text-sm hover:text-white transition-colors">
-                隐私政策
+                Privacy Policy
               </router-link>
             </li>
             <li>
               <router-link to="/contact" class="text-sm hover:text-white transition-colors">
-                联系我们
+                Contact Us
               </router-link>
             </li>
           </ul>
@@ -34,7 +34,7 @@
 
         <!-- Contact -->
         <div>
-          <h4 class="text-white text-sm font-semibold mb-4">联系我们</h4>
+          <h4 class="text-white text-sm font-semibold mb-4">Contact</h4>
           <a href="mailto:weifuaiii@qq.com" class="text-sm hover:text-white transition-colors">
             weifuaiii@qq.com
           </a>
