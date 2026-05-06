@@ -2,16 +2,16 @@
   <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <div class="bg-white shadow-lg rounded-lg p-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">联系我们</h1>
-        
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Contact Us</h1>
+
         <div class="prose max-w-none">
           <p class="text-gray-700 mb-8">
-            如果您有任何问题、建议或需要帮助，请通过以下方式联系我们。
+            If you have any questions, feedback, or need help, please reach out to us using the information below.
           </p>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">联系方式</h2>
-            
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
+
             <div class="space-y-4">
               <div class="flex items-start space-x-3">
                 <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -20,10 +20,10 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-medium text-gray-900">电子邮件</h3>
+                  <h3 class="text-lg font-medium text-gray-900">Email</h3>
                   <p class="text-gray-700 mt-1">
-                    客服支持：<a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a><br>
-                    隐私相关问题：<a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>
+                    Customer Support: <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a><br>
+                    Privacy Inquiries: <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>
                   </p>
                 </div>
               </div>
@@ -35,10 +35,10 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-medium text-gray-900">响应时间</h3>
+                  <h3 class="text-lg font-medium text-gray-900">Response Time</h3>
                   <p class="text-gray-700 mt-1">
-                    我们会在 24-48 小时内回复您的邮件。<br>
-                    节假日响应时间可能延长。
+                    We typically respond to emails within 24–48 hours.<br>
+                    Response times may be longer during holidays.
                   </p>
                 </div>
               </div>
@@ -46,29 +46,29 @@
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">常见问题</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">FAQ</h2>
             <p class="text-gray-700 mb-4">
-              在联系我们之前，您可以先查看：
+              Before contacting us, you may want to check:
             </p>
             <ul class="list-disc pl-6 text-gray-700">
-              <li><router-link to="/" class="text-indigo-600 hover:text-indigo-500">首页</router-link> - 了解 Echo Moon 的功能</li>
-              <li>检查 <router-link to="/terms" class="text-indigo-600 hover:text-indigo-500">服务条款</router-link> 和 <router-link to="/privacy" class="text-indigo-600 hover:text-indigo-500">隐私政策</router-link></li>
+              <li><router-link to="/" class="text-indigo-600 hover:text-indigo-500">Home</router-link> — Learn about Echo Moon's features</li>
+              <li><router-link to="/terms" class="text-indigo-600 hover:text-indigo-500">Terms of Service</router-link> and <router-link to="/privacy" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</router-link></li>
             </ul>
           </section>
 
           <section class="mb-8 bg-gray-50 rounded-lg p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">反馈建议</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Feedback & Suggestions</h2>
             <p class="text-gray-700">
-              我们非常重视您的反馈！如果您有功能建议或发现 bug，
-              请发邮件至 <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>，
-              我们会认真考虑每一条建议。
+              We value your feedback! If you have feature suggestions or have found a bug,
+              please email us at <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>.
+              We carefully consider every suggestion.
             </p>
           </section>
         </div>
 
         <div class="mt-8 pt-8 border-t">
           <router-link to="/" class="text-indigo-600 hover:text-indigo-500">
-            ← 返回首页
+            &larr; Back to Home
           </router-link>
         </div>
       </div>

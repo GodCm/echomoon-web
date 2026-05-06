@@ -2,93 +2,93 @@
   <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <div class="bg-white shadow-lg rounded-lg p-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">服务条款</h1>
-        
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Terms of Service</h1>
+
         <div class="prose max-w-none">
-          <p class="text-gray-600 mb-4">最后更新：2026年4月</p>
-          
+          <p class="text-gray-600 mb-4">Last updated: April 2026</p>
+
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">1. 服务说明</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">1. Service Description</h2>
             <p class="text-gray-700 mb-4">
-              Echo Moon（"我们"）提供 AI 对话服务，允许用户创建 AI 角色并进行对话。
-              本服务仅供参考和娱乐目的，不构成任何形式的专业建议。
+              Echo Moon ("we", "us") provides an AI-powered conversation service that allows users to create AI characters and engage in dialogue.
+              This service is intended for entertainment and reflection purposes only and does not constitute any form of professional advice.
             </p>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">2. 用户账户</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">2. User Accounts</h2>
             <p class="text-gray-700 mb-4">
-              使用本服务需要注册账户。您有责任保护账户信息的安全性，并对账户下的所有活动负责。
-              您同意：
+              Registration is required to use this service. You are responsible for keeping your account information secure and for all activities under your account.
+              You agree to:
             </p>
             <ul class="list-disc pl-6 text-gray-700">
-              <li>提供准确、完整的注册信息</li>
-              <li>维护密码的机密性</li>
-              <li>立即通知我们任何未授权使用</li>
+              <li>Provide accurate and complete registration information</li>
+              <li>Keep your password confidential</li>
+              <li>Notify us immediately of any unauthorized use</li>
             </ul>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">3. 用户内容</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">3. User Content</h2>
             <p class="text-gray-700 mb-4">
-              您在使用服务时创建的内容（包括角色设定、对话记录等）归您所有。
-              但您授予我们必要的许可，以便提供服务功能（如存储、处理、生成回复）。
+              The content you create while using the service (including character settings, conversation logs, etc.) belongs to you.
+              However, you grant us the necessary licenses to provide the service's functionality (such as storage, processing, and generating responses).
             </p>
             <p class="text-gray-700 mb-4">
-              您承诺不创建或分享：
+              You agree not to create or share:
             </p>
             <ul class="list-disc pl-6 text-gray-700">
-              <li>违法、有害、威胁、滥用、骚扰、侵犯版权的内容</li>
-              <li>包含个人敏感信息（如密码、身份证号）的内容</li>
-              <li>恶意代码或试图干扰服务运行的内容</li>
+              <li>Illegal, harmful, threatening, abusive, harassing, or copyright-infringing content</li>
+              <li>Content containing sensitive personal information (e.g., passwords, ID numbers)</li>
+              <li>Malicious code or content that attempts to disrupt service operations</li>
             </ul>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">4. AI 生成内容免责</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">4. AI-Generated Content Disclaimer</h2>
             <p class="text-gray-700 mb-4">
-              本服务使用 AI 技术生成回复内容。AI 生成的内容可能不准确、不完整或具有误导性。
-              我们不对 AI 生成内容的准确性、可靠性或适当性做任何保证。
-              您应自行判断并承担使用 AI 生成内容的风险。
+              This service uses AI technology to generate responses. AI-generated content may be inaccurate, incomplete, or misleading.
+              We make no warranties regarding the accuracy, reliability, or appropriateness of AI-generated content.
+              You should exercise your own judgment and bear the risk of using AI-generated content.
             </p>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">5. 付费服务</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">5. Paid Services</h2>
             <p class="text-gray-700 mb-4">
-              部分功能可能需要付费订阅。付费后不支持退款，除非法律另有规定。
-              我们保留随时调整价格的权利，调整前会提前通知。
+              Some features may require a paid subscription. Refunds are not available after purchase unless required by law.
+              We reserve the right to adjust pricing at any time with prior notice.
             </p>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">6. 服务变更与终止</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">6. Changes & Termination</h2>
             <p class="text-gray-700 mb-4">
-              我们保留随时修改或终止服务的权利，无需事先通知。
-              如果您违反本条款，我们可暂停或终止您的账户。
+              We reserve the right to modify or terminate the service at any time without prior notice.
+              If you violate these terms, we may suspend or terminate your account.
             </p>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">7. 免责声明</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">7. Disclaimer</h2>
             <p class="text-gray-700 mb-4">
-              本服务按"原样"提供，不提供任何明示或暗示的保证。
-              在法律允许的最大范围内，我们否认所有保证，包括但不限于适销性、特定用途适用性的保证。
+              This service is provided "as is" without any express or implied warranties.
+              To the fullest extent permitted by law, we disclaim all warranties, including but not limited to warranties of merchantability and fitness for a particular purpose.
             </p>
           </section>
 
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">8. 联系我们</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">8. Contact Us</h2>
             <p class="text-gray-700 mb-4">
-              如有任何疑问，请通过以下方式联系我们：<br>
-              邮箱：weifuaiii@qq.com
+              If you have any questions, please contact us at:<br>
+              Email: <a href="mailto:weifuaiii@qq.com" class="text-indigo-600 hover:text-indigo-500">weifuaiii@qq.com</a>
             </p>
           </section>
         </div>
 
         <div class="mt-8 pt-8 border-t">
           <router-link to="/" class="text-indigo-600 hover:text-indigo-500">
-            ← 返回首页
+            &larr; Back to Home
           </router-link>
         </div>
       </div>
