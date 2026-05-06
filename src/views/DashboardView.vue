@@ -5,18 +5,25 @@ import { useAuthStore } from '@/stores/auth'
 import { useCharacterStore } from '@/stores/character'
 import { RouterLink } from 'vue-router'
 import { Moon, Plus, MessageCircle, Crown, Star, ChevronRight, LogOut, User, Sparkles, Edit2, Trash2 } from 'lucide-vue-next'
-import { useUser } from '@clerk/vue'
+import { useUser, useAuth } from '@clerk/vue'
+import { setGetToken } from '@/api'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const characterStore = useCharacterStore()
 const { user } = useUser()
+const { getToken } = useAuth()
 
 // Delete confirmation modal
 const showDeleteModal = ref(false)
 const characterToDelete = ref<{ id: string; name: string } | null>(null)
 
-onMounted(() => {
+// Wire Clerk JWT token to API layer
+onMounted(async () => {
+  // Set up token getter for API calls
+  setGetToken(async () => {
+    return await getToken.value({ template: 'echomoon-api' }) || null
+  })
   characterStore.fetchCharacters()
 })
 
