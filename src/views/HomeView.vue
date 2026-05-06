@@ -263,9 +263,9 @@ import { Moon, Heart, MessageCircle, Sparkles, Star, ArrowRight } from 'lucide-v
           <span>Echo Moon — Continue the Conversation</span>
         </div>
         <div class="flex items-center gap-6 text-sm text-text-muted">
-          <a href="#" class="hover:text-text-secondary transition-colors">Privacy</a>
-          <a href="#" class="hover:text-text-secondary transition-colors">Terms</a>
-          <a href="#" class="hover:text-text-secondary transition-colors">Contact</a>
+          <RouterLink to="/privacy" class="hover:text-text-secondary transition-colors">Privacy</RouterLink>
+          <RouterLink to="/terms" class="hover:text-text-secondary transition-colors">Terms</RouterLink>
+          <RouterLink to="/contact" class="hover:text-text-secondary transition-colors">Contact</RouterLink>
         </div>
       </div>
     </footer>
