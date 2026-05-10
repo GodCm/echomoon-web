@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { Moon, Heart, MessageCircle, Sparkles, Star, ArrowRight } from 'lucide-vue-next'
+import { useAuth } from '@clerk/vue'
+import { UserButton } from '@clerk/vue'
+
+const { isSignedIn } = useAuth()
 </script>
 
 <template>
@@ -41,12 +45,20 @@ import { Moon, Heart, MessageCircle, Sparkles, Star, ArrowRight } from 'lucide-v
         </div>
         
         <div class="flex items-center gap-4">
-          <RouterLink to="/login" class="text-text-secondary hover:text-text transition-colors">
-            Log In
-          </RouterLink>
-          <RouterLink to="/register" class="btn-primary text-sm">
-            Get Started
-          </RouterLink>
+          <template v-if="isSignedIn">
+            <RouterLink to="/dashboard" class="text-text-secondary hover:text-text transition-colors">
+              Dashboard
+            </RouterLink>
+            <UserButton />
+          </template>
+          <template v-else>
+            <RouterLink to="/login" class="text-text-secondary hover:text-text transition-colors">
+              Log In
+            </RouterLink>
+            <RouterLink to="/register" class="btn-primary text-sm">
+              Get Started
+            </RouterLink>
+          </template>
         </div>
       </div>
     </nav>
