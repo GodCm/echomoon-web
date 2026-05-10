@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCharacterStore } from '@/stores/character'
 import { RouterLink } from 'vue-router'
@@ -9,6 +9,7 @@ import { useUser, useAuth } from '@clerk/vue'
 import { setGetToken } from '@/api'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const characterStore = useCharacterStore()
 const { user } = useUser()
@@ -24,6 +25,33 @@ onMounted(async () => {
   setGetToken(async () => {
     return await getToken.value({ template: 'echomoon-api' }) || null
   })
+  
+  // Check if user just returned from Creem checkout (success_url contains clerkUserId)
+  const { clerkUserId } = route.query
+  if (clerkUserId && typeof clerkUserId === 'string') {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'https://echomoon-api-production.up.railway.app'
+      const token = await getToken.value({ template: 'echomoon-api' })
+      const res = await fetch(`${API_URL}/api/creem/confirm-upgrade`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token || ''}`
+        },
+        body: JSON.stringify({ clerkUserId })
+      })
+      if (res.ok) {
+        authStore.updateSubscription('pro')
+        console.log('Upgraded to pro via confirm-upgrade')
+      }
+    } catch (e) {
+      console.error('Error confirming upgrade:', e)
+    } finally {
+      // Remove clerkUserId from URL
+      router.replace({ query: {} })
+    }
+  }
+  
   characterStore.fetchCharacters()
 })
 
