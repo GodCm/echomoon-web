@@ -5,13 +5,21 @@ import { RouterLink } from 'vue-router'
 import { Moon, Check, ArrowLeft, Crown, Sparkles, MessageCircle, Infinity, Brain } from 'lucide-vue-next'
 import { setGetToken } from '@/api'
 import { useAuth } from '@clerk/vue'
+import { useUser } from '@clerk/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { getToken } = useAuth()
+const { user } = useUser()
 
 async function subscribePro() {
   try {
+    // Check if user is loaded
+    if (!user.value?.id) {
+      alert('Please wait, loading user information...')
+      return
+    }
+    
     // Get the JWT token from Clerk
     const token = await getToken.value?.({ template: 'echomoon-api' })
     
@@ -28,7 +36,7 @@ async function subscribePro() {
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        clerkUserId: authStore.user?.clerkUserId || authStore.user?.id
+        clerkUserId: user.value.id
       })
     })
     
