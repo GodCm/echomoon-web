@@ -3,14 +3,52 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { RouterLink } from 'vue-router'
 import { Moon, Check, ArrowLeft, Crown, Sparkles, MessageCircle, Infinity, Brain } from 'lucide-vue-next'
+import { setGetToken } from '@/api'
+import { useAuth } from '@clerk/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { getToken } = useAuth()
 
-function subscribePro() {
-  // In production, this would integrate with Stripe
-  authStore.updateSubscription('pro')
-  router.push('/dashboard')
+async function subscribePro() {
+  try {
+    // Get the JWT token from Clerk
+    const token = await getToken.value?.({ template: 'echomoon-api' })
+    
+    if (!token) {
+      alert('Authentication error. Please sign in again.')
+      return
+    }
+    
+    // Call backend to create Creem checkout session
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/creem/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        clerkUserId: authStore.user?.clerkUserId || authStore.user?.id
+      })
+    })
+    
+    if (!response.ok) {
+      throw new Error('Failed to create checkout session')
+    }
+    
+    const data = await response.json()
+    
+    // Redirect to Creem checkout page
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url
+    } else {
+      throw new Error('No checkout URL returned')
+    }
+    
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    alert('Failed to start checkout process. Please try again.')
+  }
 }
 </script>
 

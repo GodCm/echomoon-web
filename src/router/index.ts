@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@clerk/vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,9 +19,27 @@ const router = createRouter({
       meta: { auth: 'signed-out' }
     },
     {
+      path: '/login/:pathMatch(.*)*',
+      name: 'login-wildcard',
+      component: () => import('@/views/LoginView.vue'),
+      meta: { auth: 'signed-out' }
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('@/views/RegisterView.vue'),
+      meta: { auth: 'signed-out' }
+    },
+    {
+      path: '/register/:pathMatch(.*)*',
+      name: 'register-wildcard',
+      component: () => import('@/views/RegisterView.vue'),
+      meta: { auth: 'signed-out' }
+    },
+    {
+      path: '/verify',
+      name: 'verify',
+      component: () => import('@/views/VerifyView.vue'),
       meta: { auth: 'signed-out' }
     },
     {
@@ -69,6 +88,23 @@ const router = createRouter({
       component: () => import('@/views/ContactView.vue')
     }
   ]
+})
+
+// Router guard to handle auth meta
+router.beforeEach((to, _from, next) => {
+  const { isSignedIn } = useAuth()
+  const requiresAuth = to.meta.auth === 'signed-in'
+  const requiresSignedOut = to.meta.auth === 'signed-out'
+
+  if (requiresAuth && !isSignedIn.value) {
+    // User is not signed in but page requires auth, redirect to register
+    next({ name: 'register' })
+  } else if (requiresSignedOut && isSignedIn.value) {
+    // User is signed in but page requires signed out, redirect to dashboard
+    next({ name: 'dashboard' })
+  } else {
+    next()
+  }
 })
 
 export default router

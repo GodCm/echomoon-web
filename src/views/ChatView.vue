@@ -5,12 +5,14 @@ import { useCharacterStore } from '@/stores/character'
 import { useAuthStore } from '@/stores/auth'
 import { RouterLink } from 'vue-router'
 import { Moon, Send, ArrowLeft, Trash2, Sparkles } from 'lucide-vue-next'
-import { conversationApi } from '@/api'
+import { conversationApi, setGetToken } from '@/api'
+import { useAuth } from '@clerk/vue'
 
 const route = useRoute()
 const router = useRouter()
 const characterStore = useCharacterStore()
 const authStore = useAuthStore()
+const { getToken } = useAuth()
 
 const messageInput = ref('')
 const isTyping = ref(false)
@@ -27,6 +29,11 @@ const usedMessages = computed(() => {
 const remainingMessages = computed(() => Math.max(0, dailyLimit - usedMessages.value))
 
 onMounted(async () => {
+  // Ensure token getter is wired (in case user navigated directly to this page)
+  setGetToken(async () => {
+    return await getToken.value({ template: 'echomoon-api' }) || null
+  })
+
   await characterStore.getCharacter(characterId.value)
   characterStore.clearMessages()
   
