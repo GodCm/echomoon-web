@@ -10,8 +10,10 @@ export const useAuthStore = defineStore('auth', () => {
   // Reactive state derived from Clerk
   const isAuthenticated = computed(() => !!isSignedIn.value)
   const isPro = computed(() => {
-    const pub = (user.value?.publicMetadata as any)?.subscription
-    return pub === 'pro'
+    // Check both unsafeMetadata (client-updatable) and publicMetadata (server-only)
+    const meta = user.value as any
+    const sub = meta?.unsafeMetadata?.subscription || meta?.publicMetadata?.subscription
+    return sub === 'pro'
   })
 
   // Get JWT token for API calls
@@ -38,8 +40,34 @@ export const useAuthStore = defineStore('auth', () => {
           subscription
         }
       })
+      // Also update local state immediately for reactivity
+      ;(user.value as any).__unsafeMetadata = {
+        ...((user.value as any).__unsafeMetadata || {}),
+        subscription
+      }
     } catch (e) {
       console.error('Failed to update subscription', e)
+    }
+  }
+
+  // Sync subscription from backend (MongoDB) to local state
+  async function syncSubscriptionFromBackend() {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'https://echomoon-api-production.up.railway.app'
+      const token = await getAuthToken()
+      const res = await fetch(`${API_URL}/api/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token || ''}`
+        }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.user?.subscription === 'pro') {
+          await updateSubscription('pro')
+        }
+      }
+    } catch (e) {
+      console.error('Failed to sync subscription', e)
     }
   }
 
@@ -48,6 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
     isPro,
     getAuthToken,
     logout,
-    updateSubscription
+    updateSubscription,
+    syncSubscriptionFromBackend
   }
 })

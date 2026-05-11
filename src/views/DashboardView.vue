@@ -50,6 +50,9 @@ onMounted(async () => {
       // Remove clerkUserId from URL
       router.replace({ query: {} })
     }
+  } else {
+    // Sync subscription from backend on regular page load
+    await authStore.syncSubscriptionFromBackend()
   }
   
   characterStore.fetchCharacters()
