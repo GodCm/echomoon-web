@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /character/
+Disallow: /chat/
+Disallow: /subscribe
+
+Sitemap: https://www.echomoon.it.com/sitemap.xml

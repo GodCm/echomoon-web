@@ -275,6 +275,7 @@ const { isSignedIn } = useAuth()
           <span>Echo Moon — Continue the Conversation</span>
         </div>
         <div class="flex items-center gap-6 text-sm text-text-muted">
+          <RouterLink to="/about" class="hover:text-text-secondary transition-colors">About</RouterLink>
           <RouterLink to="/privacy" class="hover:text-text-secondary transition-colors">Privacy</RouterLink>
           <RouterLink to="/terms" class="hover:text-text-secondary transition-colors">Terms</RouterLink>
           <RouterLink to="/contact" class="hover:text-text-secondary transition-colors">Contact</RouterLink>
