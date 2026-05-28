@@ -46,25 +46,25 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/views/DashboardView.vue'),
-      meta: { auth: 'signed-in' }
+      meta: { auth: 'signed-in', hideFooter: true }
     },
     {
       path: '/character/create',
       name: 'character-create',
       component: () => import('@/views/CharacterCreateView.vue'),
-      meta: { auth: 'signed-in' }
+      meta: { auth: 'signed-in', hideFooter: true }
     },
     {
       path: '/character/edit/:id',
       name: 'character-edit',
       component: () => import('@/views/CharacterEditView.vue'),
-      meta: { auth: 'signed-in' }
+      meta: { auth: 'signed-in', hideFooter: true }
     },
     {
       path: '/chat/:id',
       name: 'chat',
       component: () => import('@/views/ChatView.vue'),
-      meta: { auth: 'signed-in' }
+      meta: { auth: 'signed-in', hideFooter: true }
     },
     {
       path: '/subscribe',
