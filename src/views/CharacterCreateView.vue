@@ -48,8 +48,109 @@ const goalOptions = [
   { value: 'chat', label: "I'm not sure, just wanna talk", description: 'No agenda, just see where the conversation goes' }
 ] as const
 
+// ───── Option definitions ─────
+
+const personalityOptions = [
+  { label: '🤫 Quiet but caring', value: 'Introverted and reserved, but shows deep care for people close to them' },
+  { label: '😄 Warm and cheerful', value: 'Warm, optimistic, and always made others smile' },
+  { label: '🧠 Thoughtful & analytical', value: 'Logical, thoughtful, tended to overthink things' },
+  { label: '🎭 Funny & sarcastic', value: 'Had a sharp wit and a great sense of humor, often used sarcasm' },
+  { label: '💪 Stubborn but loyal', value: 'Headstrong and stubborn at times, but fiercely loyal' },
+  { label: '✏️ Other (type it)', value: '__custom__' },
+]
+const personalitySelected = ref<string[]>([])
+const personalityCustom = ref('')
+
+const reasonOptions = [
+  { label: '💬 Poor communication', value: 'We stopped communicating well and drifted apart' },
+  { label: '📍 Long distance', value: 'The distance made things too difficult to maintain' },
+  { label: '🔀 Different life paths', value: 'We wanted different things in life and grew in different directions' },
+  { label: '💔 Lost feelings', value: 'The feelings faded over time and we decided to end it' },
+  { label: '⚡ A specific conflict', value: 'A major argument or incident that neither of us could move past' },
+  { label: '🌱 They needed space', value: 'They said they needed time and space to find themselves' },
+  { label: '✏️ Other (type it)', value: '__custom__' },
+]
+const reasonSelected = ref<string[]>([])
+const reasonCustom = ref('')
+
+const speakingStyleOptions = [
+  { label: '😂 Loved using emojis', value: 'Always used lots of emojis in messages' },
+  { label: '⏳ Slow to reply', value: 'Always took a long time to respond, but replies were thoughtful' },
+  { label: '⚡ Fast & brief replies', value: 'Replied quickly but kept messages short and to the point' },
+  { label: '📖 Long heartfelt messages', value: 'Wrote long, detailed messages when something mattered' },
+  { label: '😏 Teasing & playful', value: 'Always teasing and playful, turned everything into a joke' },
+  { label: '🧊 Reserved, hard to read', value: 'Hard to read — very reserved, rarely showed feelings in text' },
+  { label: '✏️ Other (type it)', value: '__custom__' },
+]
+const speakingSelected = ref<string[]>([])
+const speakingCustom = ref('')
+
+const forbiddenTopicOptions = [
+  { label: '👨‍👩‍👧 Family drama', value: 'Family issues or family conflicts' },
+  { label: '💸 Money problems', value: 'Financial struggles or money arguments' },
+  { label: '💚 Their new relationship', value: "Any mention of their new partner or who they're seeing now" },
+  { label: '🧠 Mental health', value: 'Anything touching on mental health or emotional breakdowns' },
+  { label: '🔥 That one big fight', value: 'The specific argument that caused the most damage' },
+  { label: '🔒 Nothing off-limits', value: '' },
+  { label: '✏️ Other (type it)', value: '__custom__' },
+]
+const forbiddenSelected = ref<string[]>([])
+const forbiddenCustom = ref('')
+
+const whatTheyAreLikeOptions = [
+  { label: '🌅 Adventure lover', value: 'Loved adventure, travel, and trying new experiences' },
+  { label: '🏠 Homebody at heart', value: 'Preferred cozy nights in over going out — a true homebody' },
+  { label: '🎨 Creative & artistic', value: 'Creative soul — music, art, or writing was a big part of their life' },
+  { label: '🏆 Driven & ambitious', value: 'Very career-focused and driven, always working toward a goal' },
+  { label: '🤗 Social butterfly', value: 'Loved being around people, always the life of the party' },
+  { label: '🌿 Quiet & introspective', value: 'Preferred deep one-on-one conversations over crowds' },
+  { label: '✏️ Other (type it)', value: '__custom__' },
+]
+const whatTheySelected = ref<string[]>([])
+const whatTheyCustom = ref('')
+
+// ───── Helper: build text from selections ─────
+function buildFieldValue(selected: string[], custom: string): string {
+  const vals = selected
+    .filter(v => v !== '__custom__' && v !== '')
+    .join('. ')
+  const parts: string[] = []
+  if (vals) parts.push(vals)
+  if (selected.includes('__custom__') && custom.trim()) parts.push(custom.trim())
+  return parts.join('. ')
+}
+
+function toggleOption(arr: string[], value: string, isSingle = false) {
+  if (value === '' ) {
+    // "Nothing off-limits" clears all
+    arr.splice(0, arr.length)
+    arr.push(value)
+    return
+  }
+  // If "nothing off-limits" was selected and user picks something else, remove it
+  const noneIdx = arr.indexOf('')
+  if (noneIdx !== -1) arr.splice(noneIdx, 1)
+
+  const idx = arr.indexOf(value)
+  if (idx !== -1) {
+    arr.splice(idx, 1)
+  } else {
+    if (isSingle) arr.splice(0, arr.length)
+    arr.push(value)
+  }
+}
+
+// ───── Sync selections → formData before submit ─────
+function syncFormData() {
+  formData.value.personality = buildFieldValue(personalitySelected.value, personalityCustom.value)
+  formData.value.reasonForSeparation = buildFieldValue(reasonSelected.value, reasonCustom.value)
+  formData.value.speakingStyleCatchphrases = buildFieldValue(speakingSelected.value, speakingCustom.value)
+  formData.value.forbiddenTopics = buildFieldValue(forbiddenSelected.value, forbiddenCustom.value)
+  formData.value.whatTheyAreLike = buildFieldValue(whatTheySelected.value, whatTheyCustom.value)
+}
+
+// ───── Validation ─────
 const isStep1Valid = computed(() => formData.value.name.trim() !== '')
-// Steps 2, 3, 4 are optional - user can skip or fill partially
 const isStep2Valid = computed(() => true)
 const isStep3Valid = computed(() => true)
 const isStep4Valid = computed(() => true)
@@ -80,10 +181,9 @@ const errorMessage = ref('')
 
 async function handleSubmit() {
   if (!canProceed.value) return
-  
+  syncFormData()
   isSubmitting.value = true
   errorMessage.value = ''
-  
   try {
     const character = await characterStore.createCharacter(formData.value)
     router.push(`/chat/${character.id}`)
@@ -114,35 +214,18 @@ async function analyzeChatHistory() {
     analyzeError.value = 'Please enter at least 50 characters'
     return
   }
-
   isAnalyzing.value = true
   analyzeError.value = ''
   analyzeSuccess.value = ''
-
   try {
     const result = await characterApi.analyzeChat(chatImportText.value)
-    
-    // Auto-fill the form with analyzed data
-    if (result.personality) {
-      formData.value.personality = result.personality
-    }
-    if (result.speakingStyle) {
-      formData.value.speakingStyleCatchphrases = result.speakingStyle
-    }
-    if (result.importantMemories) {
-      formData.value.importantMemories = result.importantMemories
-    }
-    if (result.goal) {
-      formData.value.goal = result.goal
-    }
-    
+    if (result.personality) formData.value.personality = result.personality
+    if (result.speakingStyle) formData.value.speakingStyleCatchphrases = result.speakingStyle
+    if (result.importantMemories) formData.value.importantMemories = result.importantMemories
+    if (result.goal) formData.value.goal = result.goal
     analyzeSuccess.value = 'Analysis complete! Fields auto-filled. You can edit below.'
     chatImportText.value = ''
-    
-    // Auto-advance to step 3 (Communication Style) to show filled fields
-    if (currentStep.value === 2) {
-      currentStep.value = 3
-    }
+    if (currentStep.value === 2) currentStep.value = 3
   } catch (error: any) {
     analyzeError.value = error.message || 'Failed to analyze chat. Please try again.'
   } finally {
@@ -176,17 +259,17 @@ async function analyzeChatHistory() {
       <div class="mb-12">
         <div class="flex items-center justify-between mb-4">
           <div v-for="step in totalSteps" :key="step" class="flex items-center">
-            <div 
+            <div
               class="w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300"
-              :class="currentStep >= step 
-                ? 'bg-primary text-white' 
+              :class="currentStep >= step
+                ? 'bg-primary text-white'
                 : 'bg-background-lighter text-text-muted border border-white/10'"
             >
               <Check v-if="currentStep > step" class="w-5 h-5" />
               <span v-else>{{ step }}</span>
             </div>
-            <div 
-              v-if="step < totalSteps" 
+            <div
+              v-if="step < totalSteps"
               class="w-16 md:w-24 h-0.5 mx-2 transition-all duration-300"
               :class="currentStep > step ? 'bg-primary' : 'bg-white/10'"
             ></div>
@@ -200,24 +283,23 @@ async function analyzeChatHistory() {
 
       <!-- Form -->
       <div class="glass-card p-8">
-        <!-- Step 1: Basic Info -->
+
+        <!-- ───── Step 1: Basic Info ───── -->
         <div v-show="currentStep === 1" class="space-y-6">
           <div>
             <label class="block text-sm font-medium mb-2">
               Name <span class="text-functional-error">*</span>
             </label>
-            <input 
+            <input
               v-model="formData.name"
-              type="text" 
+              type="text"
               placeholder="Their name"
               class="input-field"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-2">
-              Choose an avatar
-            </label>
+            <label class="block text-sm font-medium mb-2">Choose an avatar</label>
             <div class="grid grid-cols-8 gap-2">
               <button
                 v-for="avatar in avatarOptions"
@@ -225,8 +307,8 @@ async function analyzeChatHistory() {
                 type="button"
                 @click="formData.avatar = avatar"
                 class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all duration-200"
-                :class="formData.avatar === avatar 
-                  ? 'bg-primary/20 border-2 border-primary scale-110' 
+                :class="formData.avatar === avatar
+                  ? 'bg-primary/20 border-2 border-primary scale-110'
                   : 'bg-background-lighter hover:bg-white/10 border-2 border-transparent'"
               >
                 {{ avatar }}
@@ -245,8 +327,8 @@ async function analyzeChatHistory() {
                 type="button"
                 @click="formData.goal = option.value"
                 class="p-4 rounded-xl border transition-all duration-300 text-left"
-                :class="formData.goal === option.value 
-                  ? 'border-primary bg-primary/10' 
+                :class="formData.goal === option.value
+                  ? 'border-primary bg-primary/10'
                   : 'border-white/10 hover:border-white/20'"
               >
                 <p class="font-medium">{{ option.label }}</p>
@@ -264,8 +346,8 @@ async function analyzeChatHistory() {
                 type="button"
                 @click="formData.gender = option as any"
                 class="p-4 rounded-xl border transition-all duration-300 text-center"
-                :class="formData.gender === option 
-                  ? 'border-primary bg-primary/10 text-primary' 
+                :class="formData.gender === option
+                  ? 'border-primary bg-primary/10 text-primary'
                   : 'border-white/10 hover:border-white/20'"
               >
                 {{ option === 'male' ? '👨 Male' : option === 'female' ? '👩 Female' : '🧑 Other' }}
@@ -277,7 +359,7 @@ async function analyzeChatHistory() {
           <div class="pt-6 border-t border-white/10">
             <h3 class="font-medium mb-4 flex items-center gap-2">
               <Calendar class="w-4 h-4 text-primary" />
-              Important Dates (Optional)
+              Important Dates <span class="text-text-muted font-normal text-sm">(Optional)</span>
             </h3>
             <div class="grid md:grid-cols-2 gap-4">
               <div>
@@ -304,165 +386,231 @@ async function analyzeChatHistory() {
           </div>
         </div>
 
-        <!-- Step 2: Relationship Background -->
-        <div v-show="currentStep === 2" class="space-y-6">
-          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4 mb-6">
+        <!-- ───── Step 2: Relationship Background ───── -->
+        <div v-show="currentStep === 2" class="space-y-8">
+          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4">
             <p class="text-sm text-text-secondary">
-              <span class="text-moon-gold font-medium">💡 All fields on this page are optional.</span> 
-              Filling them in will make the conversation feel more authentic and personal.
+              <span class="text-moon-gold font-medium">💡 All fields on this page are optional.</span>
+              Tap cards to select — filling them in makes the conversation feel more authentic.
             </p>
           </div>
 
+          <!-- Personality -->
           <div>
-            <label class="block text-sm font-medium mb-2">
-              Personality <span class="text-text-muted font-normal">(optional)</span>
+            <label class="block text-sm font-medium mb-3">
+              Personality <span class="text-text-muted font-normal">(pick all that fit)</span>
             </label>
-            <textarea 
-              v-model="formData.personality"
-              placeholder="How would you describe their personality? (e.g., introverted but caring, always put others first, had a dry sense of humor)"
-              class="input-field min-h-[100px] resize-none"
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                v-for="opt in personalityOptions"
+                :key="opt.value"
+                type="button"
+                @click="toggleOption(personalitySelected, opt.value)"
+                class="px-3 py-2.5 rounded-xl border text-sm text-left transition-all duration-200"
+                :class="personalitySelected.includes(opt.value)
+                  ? 'border-primary bg-primary/15 text-text'
+                  : 'border-white/10 hover:border-white/25 text-text-secondary'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+            <textarea
+              v-if="personalitySelected.includes('__custom__')"
+              v-model="personalityCustom"
+              placeholder="Describe their personality in your own words…"
+              class="input-field mt-3 min-h-[80px] resize-none text-sm"
             ></textarea>
-            <p class="text-xs text-text-muted mt-1">Tip: Specific traits help create more authentic responses</p>
           </div>
 
+          <!-- Story & Memories — free text (already personal, keep as textarea) -->
           <div>
             <label class="block text-sm font-medium mb-2">
               Story & Memories <span class="text-text-muted font-normal">(optional)</span>
             </label>
-            <textarea 
+            <textarea
               v-model="formData.storyMemories"
-              placeholder="Share your story together. How did you meet? What were the key moments?"
-              class="input-field min-h-[120px] resize-none"
-            ></textarea>
-            <p class="text-xs text-text-muted mt-1">Tip: Shared memories make conversations more meaningful</p>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium mb-2">
-              Reason for Separation <span class="text-text-muted font-normal">(optional)</span>
-            </label>
-            <textarea 
-              v-model="formData.reasonForSeparation"
-              placeholder="What happened? Why did you part ways?"
+              placeholder="How did you meet? What were the key moments of your time together?"
               class="input-field min-h-[100px] resize-none"
             ></textarea>
+            <p class="text-xs text-text-muted mt-1">Shared memories make conversations more meaningful</p>
           </div>
-        </div>
 
-        <!-- Quick Import: Chat History -->
-        <div v-show="currentStep === 2" class="mb-6">
+          <!-- Reason for Separation -->
+          <div>
+            <label class="block text-sm font-medium mb-3">
+              Reason for Separation <span class="text-text-muted font-normal">(pick all that apply)</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                v-for="opt in reasonOptions"
+                :key="opt.value"
+                type="button"
+                @click="toggleOption(reasonSelected, opt.value)"
+                class="px-3 py-2.5 rounded-xl border text-sm text-left transition-all duration-200"
+                :class="reasonSelected.includes(opt.value)
+                  ? 'border-primary bg-primary/15 text-text'
+                  : 'border-white/10 hover:border-white/25 text-text-secondary'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+            <textarea
+              v-if="reasonSelected.includes('__custom__')"
+              v-model="reasonCustom"
+              placeholder="What happened between you two?"
+              class="input-field mt-3 min-h-[80px] resize-none text-sm"
+            ></textarea>
+          </div>
+
+          <!-- Quick Import -->
           <div class="border border-dashed border-primary/30 rounded-xl p-4">
             <div class="flex items-center justify-between mb-3">
               <div>
                 <h4 class="font-medium text-sm">💡 Extract from their words</h4>
-                <p class="text-xs text-text-muted">Fill in things they used to say, we'll analyze their personality</p>
+                <p class="text-xs text-text-muted">Paste things they used to say — we'll analyze the patterns</p>
               </div>
-              <button 
+              <button
                 @click="showChatImport = !showChatImport"
                 class="text-primary text-sm hover:underline"
               >
-                {{ showChatImport ? 'Hide' : 'Show more' }}
+                {{ showChatImport ? 'Hide' : 'Show' }}
               </button>
             </div>
-            
             <div v-if="showChatImport" class="space-y-3">
               <textarea
                 v-model="chatImportText"
-                placeholder="Fill in things they used to say - their expressions, tone, habits...
-                
-For example:
-- Always replied late
-- Used 'haha' instead of 'hahaha'
-- Loved using emojis
-- Seems harsh but actually cares about you..."
-                class="input-field min-h-[150px] resize-none text-sm"
+                placeholder="Fill in things they used to say…&#10;&#10;e.g. Always replied late, used 'haha' instead of 'hahaha', loved emojis, seemed harsh but actually cared…"
+                class="input-field min-h-[120px] resize-none text-sm"
               ></textarea>
-              
               <div class="flex items-center justify-between">
-                <p class="text-xs text-text-muted">
-                  ✓ Only extract patterns, never store raw messages
-                </p>
-                <button 
+                <p class="text-xs text-text-muted">✓ Only patterns are extracted, raw messages are never stored</p>
+                <button
                   @click="analyzeChatHistory"
                   :disabled="isAnalyzing || chatImportText.trim().length < 50"
                   class="btn-secondary text-sm flex items-center gap-2"
                 >
                   <Loader2 v-if="isAnalyzing" class="w-4 h-4 animate-spin" />
-                  {{ isAnalyzing ? 'Analyzing...' : 'Analyze & Fill' }}
+                  {{ isAnalyzing ? 'Analyzing…' : 'Analyze & Fill' }}
                 </button>
               </div>
-              
               <p v-if="analyzeError" class="text-red-400 text-xs">{{ analyzeError }}</p>
               <p v-if="analyzeSuccess" class="text-green-400 text-xs">{{ analyzeSuccess }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Step 3: Communication Style -->
-        <div v-show="currentStep === 3" class="space-y-6">
-          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4 mb-6">
+        <!-- ───── Step 3: Communication Style ───── -->
+        <div v-show="currentStep === 3" class="space-y-8">
+          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4">
             <p class="text-sm text-text-secondary">
-              <span class="text-moon-gold font-medium">💡 All fields on this page are optional.</span> 
+              <span class="text-moon-gold font-medium">💡 All fields on this page are optional.</span>
               Knowing how they spoke helps recreate their voice.
             </p>
           </div>
 
+          <!-- Speaking Style -->
           <div>
-            <label class="block text-sm font-medium mb-2">
-              Speaking Style & Catchphrases <span class="text-text-muted font-normal">(optional)</span>
+            <label class="block text-sm font-medium mb-3">
+              Speaking Style <span class="text-text-muted font-normal">(pick all that fit)</span>
             </label>
-            <textarea 
-              v-model="formData.speakingStyleCatchphrases"
-              placeholder="How did they talk? Any favorite phrases, ways of expressing themselves? (e.g., 'Always started texts with emojis', 'Said 'you know what I mean' a lot')"
-              class="input-field min-h-[100px] resize-none"
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                v-for="opt in speakingStyleOptions"
+                :key="opt.value"
+                type="button"
+                @click="toggleOption(speakingSelected, opt.value)"
+                class="px-3 py-2.5 rounded-xl border text-sm text-left transition-all duration-200"
+                :class="speakingSelected.includes(opt.value)
+                  ? 'border-primary bg-primary/15 text-text'
+                  : 'border-white/10 hover:border-white/25 text-text-secondary'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+            <textarea
+              v-if="speakingSelected.includes('__custom__')"
+              v-model="speakingCustom"
+              placeholder="e.g. Always started texts with 'yo', never used punctuation…"
+              class="input-field mt-3 min-h-[80px] resize-none text-sm"
             ></textarea>
-            <p class="text-xs text-text-muted mt-1">Tip: Recreating their speech patterns makes conversations feel real</p>
           </div>
 
+          <!-- Important Memories — free text (very personal) -->
           <div>
             <label class="block text-sm font-medium mb-2">
               Important Memories <span class="text-text-muted font-normal">(optional)</span>
             </label>
-            <textarea 
+            <textarea
               v-model="formData.importantMemories"
               placeholder="What moments do you cherish most? Inside jokes, shared experiences, meaningful gifts?"
-              class="input-field min-h-[120px] resize-none"
+              class="input-field min-h-[100px] resize-none"
             ></textarea>
-            <p class="text-xs text-text-muted mt-1">Tip: Shared memories give the AI context to reference</p>
+            <p class="text-xs text-text-muted mt-1">Shared memories give the AI context to reference</p>
           </div>
 
+          <!-- Forbidden Topics -->
           <div>
-            <label class="block text-sm font-medium mb-2">
-              Forbidden Topics <span class="text-text-muted font-normal">(optional)</span>
+            <label class="block text-sm font-medium mb-3">
+              Forbidden Topics <span class="text-text-muted font-normal">(tap to exclude)</span>
             </label>
-            <textarea 
-              v-model="formData.forbiddenTopics"
-              placeholder="Are there any topics that are off-limits or painful to discuss?"
-              class="input-field min-h-[80px] resize-none"
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                v-for="opt in forbiddenTopicOptions"
+                :key="opt.value"
+                type="button"
+                @click="toggleOption(forbiddenSelected, opt.value)"
+                class="px-3 py-2.5 rounded-xl border text-sm text-left transition-all duration-200"
+                :class="forbiddenSelected.includes(opt.value)
+                  ? (opt.value === '' ? 'border-green-500/50 bg-green-500/10 text-green-300' : 'border-primary bg-primary/15 text-text')
+                  : 'border-white/10 hover:border-white/25 text-text-secondary'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+            <textarea
+              v-if="forbiddenSelected.includes('__custom__')"
+              v-model="forbiddenCustom"
+              placeholder="Describe what topics the AI should avoid…"
+              class="input-field mt-3 min-h-[80px] resize-none text-sm"
             ></textarea>
-            <p class="text-xs text-text-muted mt-1">The AI will gently avoid these sensitive topics</p>
+            <p class="text-xs text-text-muted mt-2">The AI will gently avoid these sensitive topics</p>
           </div>
         </div>
 
-        <!-- Step 4: Character Profile -->
-        <div v-show="currentStep === 4" class="space-y-6">
-          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4 mb-6">
+        <!-- ───── Step 4: Character Profile ───── -->
+        <div v-show="currentStep === 4" class="space-y-8">
+          <div class="bg-moon-gold/10 border border-moon-gold/20 rounded-xl p-4">
             <p class="text-sm text-text-secondary">
-              <span class="text-moon-gold font-medium">💡 This field is optional.</span> 
-              Filling it in makes the conversation more authentic and personal.
+              <span class="text-moon-gold font-medium">💡 This step is optional.</span>
+              Picking a few cards paints a fuller picture — more detail means more authentic conversations.
             </p>
           </div>
 
+          <!-- What They're Like -->
           <div>
-            <label class="block text-sm font-medium mb-2">
-              What They're Like <span class="text-text-muted font-normal">(optional)</span>
+            <label class="block text-sm font-medium mb-3">
+              What They're Like <span class="text-text-muted font-normal">(pick all that fit)</span>
             </label>
-            <textarea 
-              v-model="formData.whatTheyAreLike"
-              placeholder="Paint a complete picture. What made them unique? Their values, fears, dreams, quirks? The more detail you provide, the more authentic the conversation will be."
-              class="input-field min-h-[200px] resize-none"
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                v-for="opt in whatTheyAreLikeOptions"
+                :key="opt.value"
+                type="button"
+                @click="toggleOption(whatTheySelected, opt.value)"
+                class="px-3 py-2.5 rounded-xl border text-sm text-left transition-all duration-200"
+                :class="whatTheySelected.includes(opt.value)
+                  ? 'border-primary bg-primary/15 text-text'
+                  : 'border-white/10 hover:border-white/25 text-text-secondary'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+            <textarea
+              v-if="whatTheySelected.includes('__custom__')"
+              v-model="whatTheyCustom"
+              placeholder="What made them unique? Their values, fears, dreams, quirks…"
+              class="input-field mt-3 min-h-[120px] resize-none text-sm"
             ></textarea>
-            <p class="text-xs text-text-muted mt-1">Tip: The more detail you provide, the more authentic the conversation will be</p>
           </div>
 
           <!-- Warning -->
@@ -477,7 +625,7 @@ For example:
 
         <!-- Navigation Buttons -->
         <div class="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
-          <button 
+          <button
             v-if="currentStep > 1"
             @click="prevStep"
             class="btn-secondary flex items-center gap-2"
@@ -487,7 +635,7 @@ For example:
           </button>
           <div v-else></div>
 
-          <button 
+          <button
             v-if="currentStep < totalSteps"
             @click="nextStep"
             :disabled="!canProceed"
@@ -498,7 +646,7 @@ For example:
             <ArrowRight class="w-4 h-4" />
           </button>
 
-          <button 
+          <button
             v-else
             @click="handleSubmit"
             :disabled="!canProceed || isSubmitting"
@@ -522,11 +670,10 @@ For example:
           Tips for Better Results
         </h3>
         <ul class="text-sm text-text-secondary space-y-2">
-          <li>• Only the name is required - everything else helps create a more authentic experience</li>
-          <li>• Be specific about personality traits for realistic responses</li>
-          <li>• Include real phrases or expressions they used</li>
-          <li>• Think about memorable moments that defined your relationship</li>
-          <li>• The more detail you provide, the more authentic the conversation will be</li>
+          <li>• Only the name is required — everything else helps create a more authentic experience</li>
+          <li>• You can select multiple cards per section</li>
+          <li>• Pick "Other (type it)" to add your own custom detail</li>
+          <li>• The more cards you select, the more authentic the AI conversation will feel</li>
         </ul>
       </div>
     </main>
