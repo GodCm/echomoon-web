@@ -41,6 +41,24 @@ const formData = ref({
 
 const avatarOptions = ['🌙', '🌟', '💔', '🔥', '✨', '🎭', '👻', '🌸', '🦋', '🎨', '💫', '🌺', '🍂', '🌌', '💎', '🎸']
 
+// ───── Date helpers ─────
+const yearOptions = Array.from({ length: 77 }, (_, i) => String(2026 - i)) // 1950–2026 desc
+const monthOptions = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'))
+const dayOptions = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'))
+
+const dateParts = ref({
+  dateMet: { year: '', month: '', day: '' },
+  anniversary: { year: '', month: '', day: '' },
+  breakupDate: { year: '', month: '', day: '' },
+  theirBirthday: { year: '', month: '', day: '' },
+  myBirthday: { year: '', month: '', day: '' }
+})
+
+function combineDate(parts: { year: string; month: string; day: string }): string {
+  if (!parts.year || !parts.month || !parts.day) return ''
+  return `${parts.year}-${parts.month}-${parts.day}`
+}
+
 const goalOptions = [
   { value: 'regret', label: "I'm here to express regret", description: 'Share what you wish you had done differently' },
   { value: 'explain', label: "I'm here to explain things", description: 'Clear up misunderstandings and share your perspective' },
@@ -147,6 +165,11 @@ function syncFormData() {
   formData.value.speakingStyleCatchphrases = buildFieldValue(speakingSelected.value, speakingCustom.value)
   formData.value.forbiddenTopics = buildFieldValue(forbiddenSelected.value, forbiddenCustom.value)
   formData.value.whatTheyAreLike = buildFieldValue(whatTheySelected.value, whatTheyCustom.value)
+  formData.value.dateMet = combineDate(dateParts.value.dateMet)
+  formData.value.anniversary = combineDate(dateParts.value.anniversary)
+  formData.value.breakupDate = combineDate(dateParts.value.breakupDate)
+  formData.value.theirBirthday = combineDate(dateParts.value.theirBirthday)
+  formData.value.myBirthday = combineDate(dateParts.value.myBirthday)
 }
 
 // ───── Validation ─────
@@ -364,23 +387,88 @@ async function analyzeChatHistory() {
             <div class="grid md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm text-text-secondary mb-2">When did you meet?</label>
-                <input v-model="formData.dateMet" type="text" placeholder="YYYY-MM-DD" class="input-field" />
+                <div class="grid grid-cols-3 gap-2">
+                  <select v-model="dateParts.dateMet.year" class="input-field">
+                    <option value="" disabled>Year</option>
+                    <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+                  </select>
+                  <select v-model="dateParts.dateMet.month" class="input-field">
+                    <option value="" disabled>Month</option>
+                    <option v-for="m in monthOptions" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                  <select v-model="dateParts.dateMet.day" class="input-field">
+                    <option value="" disabled>Day</option>
+                    <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label class="block text-sm text-text-secondary mb-2">Anniversary</label>
-                <input v-model="formData.anniversary" type="text" placeholder="YYYY-MM-DD" class="input-field" />
+                <div class="grid grid-cols-3 gap-2">
+                  <select v-model="dateParts.anniversary.year" class="input-field">
+                    <option value="" disabled>Year</option>
+                    <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+                  </select>
+                  <select v-model="dateParts.anniversary.month" class="input-field">
+                    <option value="" disabled>Month</option>
+                    <option v-for="m in monthOptions" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                  <select v-model="dateParts.anniversary.day" class="input-field">
+                    <option value="" disabled>Day</option>
+                    <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label class="block text-sm text-text-secondary mb-2">Breakup Date</label>
-                <input v-model="formData.breakupDate" type="text" placeholder="YYYY-MM-DD" class="input-field" />
+                <div class="grid grid-cols-3 gap-2">
+                  <select v-model="dateParts.breakupDate.year" class="input-field">
+                    <option value="" disabled>Year</option>
+                    <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+                  </select>
+                  <select v-model="dateParts.breakupDate.month" class="input-field">
+                    <option value="" disabled>Month</option>
+                    <option v-for="m in monthOptions" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                  <select v-model="dateParts.breakupDate.day" class="input-field">
+                    <option value="" disabled>Day</option>
+                    <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label class="block text-sm text-text-secondary mb-2">Their Birthday</label>
-                <input v-model="formData.theirBirthday" type="text" placeholder="YYYY-MM-DD" class="input-field" />
+                <div class="grid grid-cols-3 gap-2">
+                  <select v-model="dateParts.theirBirthday.year" class="input-field">
+                    <option value="" disabled>Year</option>
+                    <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+                  </select>
+                  <select v-model="dateParts.theirBirthday.month" class="input-field">
+                    <option value="" disabled>Month</option>
+                    <option v-for="m in monthOptions" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                  <select v-model="dateParts.theirBirthday.day" class="input-field">
+                    <option value="" disabled>Day</option>
+                    <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
               </div>
               <div class="md:col-span-2">
                 <label class="block text-sm text-text-secondary mb-2">Your Birthday</label>
-                <input v-model="formData.myBirthday" type="text" placeholder="YYYY-MM-DD" class="input-field max-w-md" />
+                <div class="grid grid-cols-3 gap-2 max-w-md">
+                  <select v-model="dateParts.myBirthday.year" class="input-field">
+                    <option value="" disabled>Year</option>
+                    <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
+                  </select>
+                  <select v-model="dateParts.myBirthday.month" class="input-field">
+                    <option value="" disabled>Month</option>
+                    <option v-for="m in monthOptions" :key="m" :value="m">{{ m }}</option>
+                  </select>
+                  <select v-model="dateParts.myBirthday.day" class="input-field">
+                    <option value="" disabled>Day</option>
+                    <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
