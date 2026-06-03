@@ -16,10 +16,13 @@ export const useCharacterStore = defineStore('character', () => {
     isLoading.value = true
     try {
       const result = await characterApi.getAll()
-      characters.value = result.characters as Character[]
+      const serverCharacters = result.characters as Character[]
+      // Merge: preserve local-only characters (e.g. newly created, not yet in server read)
+      const serverIds = new Set(serverCharacters.map(c => c.id))
+      const localOnly = characters.value.filter(c => !serverIds.has(c.id))
+      characters.value = [...localOnly, ...serverCharacters]
     } catch (error) {
       console.error('Failed to fetch characters:', error)
-      characters.value = []
     } finally {
       isLoading.value = false
     }

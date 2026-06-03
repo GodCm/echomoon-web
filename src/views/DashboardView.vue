@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useCharacterStore } from '@/stores/character'
@@ -55,6 +55,10 @@ onMounted(async () => {
     await authStore.syncSubscriptionFromBackend()
   }
   
+  characterStore.fetchCharacters()
+})
+
+onActivated(() => {
   characterStore.fetchCharacters()
 })
 
